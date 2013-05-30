@@ -46,7 +46,8 @@
 							HtmlText: false,
 							xaxis: {
 								mode: 'time',
-								showLabels: true
+								showLabels: true,
+								min: start
 							},
 							yaxis : {
 								max : 100,
@@ -74,8 +75,6 @@
 					}],
 					data2 = [{
 						data: [
-							[ start + year * 0, 18 ], // Don't know
-							[ start + year * 1, 18 ], // Don't know
 							[ start + year * 2, 18 ],
 							[ start + year * 3, 16 ],
 							[ start + year * 4, 4.3 ],
@@ -86,8 +85,6 @@
 					}],
 					data3 = [{
 						data: [
-							[ start + year * 0, 18.3 ], // Don't know
-							[ start + year * 1, 18.3 ], // Don't know
 							[ start + year * 2, 18.3 ],
 							[ start + year * 3, 17.1 ],
 							[ start + year * 4, 20.2 ],
@@ -98,8 +95,6 @@
 					}],
 					data4 = [{
 						data: [
-							[ start + year * 0, 24.1 ], // Don't know
-							[ start + year * 1, 24.1 ], // Don't know
 							[ start + year * 2, 24.1 ],
 							[ start + year * 3, 19.1 ],
 							[ start + year * 4, 32.3 ],
@@ -110,8 +105,6 @@
 					}],
 					data5 = [{
 						data: [
-							[ start + year * 0, 2.2 ], // Don't know
-							[ start + year * 1, 2.2 ], // Don't know
 							[ start + year * 2, 2.2 ],
 							[ start + year * 3, 2.2 ],
 							[ start + year * 4, 2.2 ],
