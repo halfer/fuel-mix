@@ -49,7 +49,7 @@
 								min: start
 							},
 							yaxis : {
-								max : 100,
+								max : 102,
 								min : 0
 							},
 							mouse: {
