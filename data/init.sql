@@ -37,6 +37,7 @@ CREATE TABLE mix_value (
 	percent REAL,
 	/* Each figure can be independently referenced if required */
 	source VARCHAR(255),
+	created_at INTEGER NOT NULL,
 	PRIMARY KEY (supplier_id, energy_type_id, date),
 	FOREIGN KEY (supplier_id) REFERENCES supplier(id),
 	FOREIGN KEY (energy_type_id) REFERENCES energy_type(id)
