@@ -35,3 +35,9 @@ CREATE TABLE mix_value (
 	FOREIGN KEY (supplier_id) REFERENCES supplier(id),
 	FOREIGN KEY (energy_type_id) REFERENCES energy_type(id)
 );
+
+INSERT INTO energy_type (name) VALUES('Renewables');
+INSERT INTO energy_type (name) VALUES('Nuclear');
+INSERT INTO energy_type (name) VALUES('Coal');
+INSERT INTO energy_type (name) VALUES('Natural gas');
+INSERT INTO energy_type (name) VALUES('Other');
