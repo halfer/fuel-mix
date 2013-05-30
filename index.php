@@ -12,7 +12,6 @@
 				width : 500px;
 				height: 300px;
 				margin: 8px 0 0 8px;
-				border: 1px dotted red;
 				float: left;
 			}
 		</style>
