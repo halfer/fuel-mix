@@ -1,3 +1,54 @@
+<?php
+	$root = dirname(__FILE__);
+	$dbh = new PDO('sqlite:' . $root . '/data/energy-mix.sqlite');
+
+	function getDataForType(PDO $dbh, $shortName)
+	{
+		$sql = "
+			SELECT
+				supplier.name supplier_name,
+				energy_type.name energy_type_name,
+				mix_value.supplier_id,
+				date,
+				mix_value.percent
+			FROM
+				mix_value
+			INNER JOIN energy_type ON (mix_value.energy_type_id = energy_type.id)
+			INNER JOIN supplier ON (supplier.id = mix_value.supplier_id)
+			WHERE
+				energy_type.short_name = :energy_type_short_name
+		";
+		$sth = $dbh->prepare($sql);
+		$sth->execute(
+			array('energy_type_short_name' => $shortName)
+		);
+
+		return $sth->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	function getGraphDataForType(PDO $dbh, $shortName)
+	{
+		$class = new stdClass();
+
+		$data = getDataForType($dbh, $shortName);
+		$array = array();
+		$label = '';
+		foreach ($data as $row)
+		{
+			$array[] = array(
+				$row['date'],
+				(float) $row['percent']
+			);
+			$label = $row['supplier_name'] . '(' . $row['energy_type_name'] . ')';
+		}
+
+		$class->data = $array;
+		$class->label = $label;
+
+		return $class;
+	}
+
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -60,18 +111,31 @@
 
 				function render() {
 
-					data1 = [{
-						data: [
-							[ start + year * 0, 20.2 ],
-							[ start + year * 1, 24.1 ],
-							[ start + year * 2, 37.4 ],
-							[ start + year * 3, 45.6 ],
-							[ start + year * 4, 41.0 ],
-							[ start + year * 5, 54.1 ],
-							[ start + year * 6, 64.3 ]
-						],
-						label: 'Ecotricity (renewable)'
-					}],
+					/**
+					 * Converts a data structure containing string dates to use Date types
+					 * 
+					 * @param data
+					 * @returns Array
+					 */
+					function convertDateStringsToJSDate(data)
+					{
+						for(index in data[0].data)
+						{
+							var dateStr = data[0].data[index][0];
+							data[0].data[index][0] = new Date(dateStr);
+						}
+						
+						return data;
+					}
+
+					data1 = convertDateStringsToJSDate(
+						[
+							<?php echo json_encode(
+								getGraphDataForType($dbh, 'renewable')
+							) ?>
+						]
+					);
+
 					data2 = [{
 						data: [
 							[ start + year * 2, 18 ],
