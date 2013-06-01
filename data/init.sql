@@ -34,7 +34,7 @@ CREATE TABLE energy_type (
 CREATE TABLE mix_value (
 	supplier_id INTEGER NOT NULL,
 	energy_type_id INTEGER NOT NULL,
-	date INTEGER NOT NULL,
+	date VARCHAR(10) NOT NULL,
 	percent REAL,
 	/* Each figure can be independently referenced if required */
 	source VARCHAR(255),
