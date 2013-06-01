@@ -76,68 +76,24 @@
 		<?php endforeach ?>
 
 		<script type="text/javascript" src="js/flotr2.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript">
 			(function () {
 
-				function drawGraph(container, data)
-				{
-					var
-						start = new Date("2005/04/01 01:00").getTime(),
-						graph;
-
-					graph = Flotr.draw(
-						container,
-						data,
-						{
-							legend: {
-								position: 'nw'
-							},
-							HtmlText: false,
-							xaxis: {
-								mode: 'time',
-								showLabels: true,
-								min: start
-							},
-							yaxis : {
-								max : 102,
-								min : 0
-							},
-							mouse: {
-							}
-						}
-					);
-				}
-
 				function render() {
 
-					/**
-					 * Converts a data structure containing string dates to use Date types
-					 * 
-					 * @param data
-					 * @returns Array
-					 */
-					function convertDateStringsToJSDate(data)
-					{
-						for(index in data[0].data)
-						{
-							var dateStr = data[0].data[index][0];
-							data[0].data[index][0] = new Date(dateStr);
-						}
-						
-						return data;
-					}
-
 					<?php // Render the data from the database, in a format Flot2 likes ?>
+					var renderer = new FuelMixRenderer();
 					var data;
 					<?php foreach ( $energyTypes as $type): ?>
-						data = convertDateStringsToJSDate(
+						data = renderer.convertDateStringsToJSDate(
 							[
 								<?php echo json_encode(
 									getGraphDataForType($dbh, $type)
 								) ?>
 							]
 						);
-						drawGraph(
+						renderer.drawGraph(
 							document.getElementById('container-<?php echo $type ?>'),
 							data
 						);
