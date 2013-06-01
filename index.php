@@ -75,19 +75,17 @@
 		<div id="container3" class="container"></div>
 		<div id="container4" class="container"></div>
 		<div id="container5" class="container"></div>
+
 		<script type="text/javascript" src="js/flotr2.min.js"></script>
 		<script type="text/javascript">
 			(function () {
 
-				var
-					start = new Date("2005/04/01 01:00").getTime(),
-					year = 1000 * 60 * 60 * 24 * 365,
-					graph;
-				var
-					data1, data2, data3, data4, data5;
-
 				function drawGraph(container, data)
 				{
+					var
+						start = new Date("2005/04/01 01:00").getTime(),
+						graph;
+
 					graph = Flotr.draw(
 						container,
 						data,
@@ -131,21 +129,20 @@
 					}
 
 					<?php // Render the data from the database, in a format Flot2 likes ?>
+					var data;
 					<?php foreach ( $energyTypes as $ord => $type): ?>
-						data<?php echo $ord + 1 ?> = convertDateStringsToJSDate(
+						data = convertDateStringsToJSDate(
 							[
 								<?php echo json_encode(
 									getGraphDataForType($dbh, $type)
 								) ?>
 							]
 						);
+						drawGraph(
+							document.getElementById('container<?php echo $ord + 1 ?>'),
+							data
+						);
 					<?php endforeach ?>
-
-					drawGraph(document.getElementById('container1'), data1);
-					drawGraph(document.getElementById('container2'), data2);
-					drawGraph(document.getElementById('container3'), data3);
-					drawGraph(document.getElementById('container4'), data4);
-					drawGraph(document.getElementById('container5'), data5);
 				}
 
 				render();
