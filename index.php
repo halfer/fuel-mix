@@ -70,11 +70,10 @@
 		</style>
 	</head>
 	<body>
-		<div id="container1" class="container"></div>
-		<div id="container2" class="container"></div>
-		<div id="container3" class="container"></div>
-		<div id="container4" class="container"></div>
-		<div id="container5" class="container"></div>
+		<?php foreach ($energyTypes as $type): ?>
+		<div id="container-<?php echo $type ?>" class="container"></div>
+
+		<?php endforeach ?>
 
 		<script type="text/javascript" src="js/flotr2.min.js"></script>
 		<script type="text/javascript">
@@ -130,7 +129,7 @@
 
 					<?php // Render the data from the database, in a format Flot2 likes ?>
 					var data;
-					<?php foreach ( $energyTypes as $ord => $type): ?>
+					<?php foreach ( $energyTypes as $type): ?>
 						data = convertDateStringsToJSDate(
 							[
 								<?php echo json_encode(
@@ -139,7 +138,7 @@
 							]
 						);
 						drawGraph(
-							document.getElementById('container<?php echo $ord + 1 ?>'),
+							document.getElementById('container-<?php echo $type ?>'),
 							data
 						);
 					<?php endforeach ?>
