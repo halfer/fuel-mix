@@ -27,7 +27,8 @@ CREATE TABLE supplier_alias (
 
 CREATE TABLE energy_type (
 	id INTEGER PRIMARY KEY NOT NULL,
-	name VARCHAR(50) NOT NULL
+	name VARCHAR(50) NOT NULL,
+	short_name VARCHAR(12) NOT NULL
 );
 
 CREATE TABLE mix_value (
@@ -43,8 +44,8 @@ CREATE TABLE mix_value (
 	FOREIGN KEY (energy_type_id) REFERENCES energy_type(id)
 );
 
-INSERT INTO energy_type (name) VALUES('Renewables');
-INSERT INTO energy_type (name) VALUES('Nuclear');
-INSERT INTO energy_type (name) VALUES('Coal');
-INSERT INTO energy_type (name) VALUES('Natural gas');
-INSERT INTO energy_type (name) VALUES('Other');
+INSERT INTO energy_type (name, short_name) VALUES('Renewables', 'renewable');
+INSERT INTO energy_type (name, short_name) VALUES('Nuclear', 'nuclear');
+INSERT INTO energy_type (name, short_name) VALUES('Coal', 'coal');
+INSERT INTO energy_type (name, short_name) VALUES('Natural gas', 'gas');
+INSERT INTO energy_type (name, short_name) VALUES('Other', 'other');
