@@ -1,6 +1,8 @@
 <?php
+	# Basic initialisation
 	$root = dirname(__FILE__);
 	$dbh = new PDO('sqlite:' . $root . '/data/energy-mix.sqlite');
+	$energyTypes = array('renewable', 'nuclear', 'coal', 'gas', 'other', );
 
 	function getDataForType(PDO $dbh, $shortName)
 	{
@@ -39,7 +41,7 @@
 				$row['date'],
 				(float) $row['percent']
 			);
-			$label = $row['supplier_name'] . '(' . $row['energy_type_name'] . ')';
+			$label = $row['supplier_name'] . ' (' . $row['energy_type_name'] . ')';
 		}
 
 		$class->data = $array;
@@ -128,54 +130,16 @@
 						return data;
 					}
 
-					data1 = convertDateStringsToJSDate(
-						[
-							<?php echo json_encode(
-								getGraphDataForType($dbh, 'renewable')
-							) ?>
-						]
-					);
-
-					data2 = [{
-						data: [
-							[ start + year * 2, 18 ],
-							[ start + year * 3, 16 ],
-							[ start + year * 4, 4.3 ],
-							[ start + year * 5, 2.6 ],
-							[ start + year * 6, 2.3 ]
-						],
-						label: 'Ecotricity (nuclear)'
-					}],
-					data3 = [{
-						data: [
-							[ start + year * 2, 18.3 ],
-							[ start + year * 3, 17.1 ],
-							[ start + year * 4, 20.2 ],
-							[ start + year * 5, 17.5 ],
-							[ start + year * 6, 12.1 ]
-						],
-						label: 'Ecotricity (coal)'
-					}],
-					data4 = [{
-						data: [
-							[ start + year * 2, 24.1 ],
-							[ start + year * 3, 19.1 ],
-							[ start + year * 4, 32.3 ],
-							[ start + year * 5, 24.0 ],
-							[ start + year * 6, 19.7 ]
-						],
-						label: 'Ecotricity (nat gas)'
-					}],
-					data5 = [{
-						data: [
-							[ start + year * 2, 2.2 ],
-							[ start + year * 3, 2.2 ],
-							[ start + year * 4, 2.2 ],
-							[ start + year * 5, 1.8 ],
-							[ start + year * 6, 1.6 ]
-						],
-						label: 'Ecotricity (other)'
-					}];
+					<?php // Render the data from the database, in a format Flot2 likes ?>
+					<?php foreach ( $energyTypes as $ord => $type): ?>
+						data<?php echo $ord + 1 ?> = convertDateStringsToJSDate(
+							[
+								<?php echo json_encode(
+									getGraphDataForType($dbh, $type)
+								) ?>
+							]
+						);
+					<?php endforeach ?>
 
 					drawGraph(document.getElementById('container1'), data1);
 					drawGraph(document.getElementById('container2'), data2);
