@@ -42,6 +42,13 @@ function getDataForType(PDO $dbh, $shortName)
 	return $outData;
 }
 
+/**
+ * Gets all enabled supplier data for a particular type of electricity
+ * 
+ * @param PDO $dbh
+ * @param string $shortName
+ * @return array
+ */
 function getGraphDataForType(PDO $dbh, $shortName)
 {
 	$classes = array();
@@ -59,10 +66,17 @@ function getGraphDataForType(PDO $dbh, $shortName)
 				$row['date'],
 				(float) $row['percent']
 			);
-			$label = $supplierName . ' (' . $row['energy_type_name'] . ')';
 		}
+		
+		// Get supplier data from last row (it's the same across the whole array)
+		$label = $supplierName . ' (' . $row['energy_type_name'] . ')';
+		$supplierId = $row['supplier_id'];
+
+		// Assemble a supplier class (supplier_id obviously is of no use to the graph system,
+		// so we'll remove that prior to rendering)
 		$class->data = $array;
 		$class->label = $label;
+		$class->supplier_id = $supplierId;
 		$classes[] = $class;
 	}
 
@@ -79,6 +93,7 @@ function getSupplierList(PDO $dbh)
 {
 	$sql = "
 		SELECT
+			id,
 			name,
 			website
 		FROM

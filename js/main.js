@@ -55,5 +55,41 @@ function FuelMixRenderer()
 
 		return data;
 	};
+
+	this.getEnabledSuppliers = function(data) {
+
+		// Get a list of suppliers we should render
+		var suppliers = new Array();
+		$('.supplier-tick').each(
+			function(index, el)
+			{
+				var qel = $(el);
+				var id = el.id.replace('supplier-tick-', '');
+				if (qel.is(':checked'))
+				{
+					suppliers.push(id);
+				}
+			}
+		);
+
+		// Only copy the data where suppliers are selected
+		var thisSupplierId;
+		var newData = new Array();
+		var newSupplier;
+		for(var outerIndex in data)
+		{
+			thisSupplierId = data[outerIndex].supplier_id;
+			if (suppliers.indexOf(thisSupplierId) > -1)
+			{
+				// Recreate the supplier object, skipping the supplier_id
+				var newSupplier = new Object();
+				newSupplier.data = data[outerIndex].data;
+				newSupplier.label = data[outerIndex].label;
+				newData.push(newSupplier);
+			}
+		}
+
+		return newData;
+	};
 }
 

@@ -39,13 +39,21 @@
 				float: left;
 			}
 		</style>
+		<script type="text/javascript" src="js/jquery-1.min.js"></script>
 	</head>
 	<body>
 		<div id="supplier-list">
 			<?php // Here's the supplier list ?>
 			<?php foreach (getSupplierList($dbh) as $supplier): ?>
 				<div class="supplier-item">
-					<?php echo htmlentities($supplier['name']) ?>
+					<label>
+						<input
+							type="checkbox"
+							id="supplier-tick-<?php echo $supplier['id'] ?>"
+							class="supplier-tick"
+						/>
+						<?php echo htmlentities($supplier['name']) ?>
+					</label>
 				</div>
 			<?php endforeach ?>
 			<div style="clear:both;"/>
@@ -59,28 +67,31 @@
 		<script type="text/javascript" src="js/flotr2.min.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript">
-			(function () {
+			<?php // Set up all data as a JavaScript array ?>
+			var renderer = new FuelMixRenderer();
+			<?php foreach ( $energyTypes as $type): ?>
+				var data<?php echo $type['id'] ?> = renderer.convertDateStringsToJSDate(
+					<?php echo json_encode(
+						getGraphDataForType($dbh, $type)
+					) ?>
+				);
+			<?php endforeach ?>
 
-				function render() {
+			function render() {
 
-					<?php // Render the data from the database, in a format Flot2 likes ?>
-					var renderer = new FuelMixRenderer();
-					var data;
-					<?php foreach ( $energyTypes as $type): ?>
-						data = renderer.convertDateStringsToJSDate(
-							<?php echo json_encode(
-								getGraphDataForType($dbh, $type)
-							) ?>
-						);
-						renderer.drawGraph(
-							document.getElementById('container-<?php echo $type ?>'),
-							data
-						);
-					<?php endforeach ?>
-				}
+				<?php // Render the data from the database, in a format Flot2 likes ?>
+				<?php foreach ( $energyTypes as $type): ?>
+					renderer.drawGraph(
+						document.getElementById('container-<?php echo $type ?>'),
+						renderer.getEnabledSuppliers(data<?php echo $type['id'] ?>)
+					);
+				<?php endforeach ?>
+			}
 
-				render();
-			})();
+			render();
+
+			// Set up event to re-render if suppliers are changed
+			$('.supplier-tick').click(render);
 		</script>
 	</body>
 </html>
