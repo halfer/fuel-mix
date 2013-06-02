@@ -51,6 +51,7 @@
 							type="checkbox"
 							id="supplier-tick-<?php echo $supplier['id'] ?>"
 							class="supplier-tick"
+							checked="checked"
 						/>
 						<?php echo htmlentities($supplier['name']) ?>
 					</label>
