@@ -28,7 +28,7 @@ function FuelMixRenderer()
 				},
 				yaxis : {
 					max : 102,
-					min : 0
+					min : -2
 				},
 				mouse: {
 				}
