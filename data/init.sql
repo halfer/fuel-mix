@@ -12,7 +12,8 @@ CREATE TABLE supplier (
 	business_open_at INTEGER,
 	/* Date supplier ceased trading or merged into another supplier */
 	business_close_at INTEGER,
-	source VARCHAR(255)
+	source VARCHAR(255),
+	is_enabled BOOLEAN NOT NULL DEFAULT 1
 );
 
 CREATE TABLE supplier_alias (

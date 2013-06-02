@@ -15,6 +15,7 @@ function getDataForType(PDO $dbh, $shortName)
 		INNER JOIN supplier ON (supplier.id = mix_value.supplier_id)
 		WHERE
 			energy_type.short_name = :energy_type_short_name
+			AND supplier.is_enabled = 1
 		ORDER BY
 			mix_value.supplier_id,
 			mix_value.date
@@ -84,6 +85,7 @@ function getSupplierList(PDO $dbh)
 			supplier
 		WHERE
 			business_close_at IS NULL
+			AND is_enabled = 1
 		ORDER BY
 			name ASC
 	";
