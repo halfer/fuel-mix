@@ -15,6 +15,8 @@
 			body {
 				margin: 0px;
 				padding: 0px;
+				font-family: sans-serif;
+				font-size: 0.8em;
 			}
 			#supplier-list {
 				margin: 8px;
@@ -22,8 +24,6 @@
 				background-color: #dddddd;
 				border-radius: 8px;
 				min-height: 22px;
-				font-family: sans-serif;
-				font-size: 0.8em;
 			}
 			.supplier-item {
 				float: left;
@@ -37,6 +37,11 @@
 				height: 300px;
 				margin: 8px 0 0 8px;
 				float: left;
+			}
+			#footer {
+				clear: both;
+				margin: 8px;
+				padding-top: 20px;
 			}
 		</style>
 		<script type="text/javascript" src="js/jquery-1.min.js"></script>
@@ -57,13 +62,21 @@
 					</label>
 				</div>
 			<?php endforeach ?>
-			<div style="clear:both;"/>
+			<div style="clear:both;"></div>
 		</div>
 		
 		<?php // Here's the divs to hold the graphs ?>
 		<?php foreach ($energyTypes as $type): ?>
 			<div id="container-<?php echo $type ?>" class="container"></div>
 		<?php endforeach ?>
+
+		<?php // Footer ?>
+		<div id="footer">
+			This page is a work in progress:
+			<a href="http://blog.jondh.me.uk/2013/05/uk-energy-mix-graphs/">read this blog post</a>
+			or download the 
+			<a href="https://github.com/halfer/fuel-mix">freely available source</a>.
+		</div>		
 
 		<script type="text/javascript" src="js/flotr2.min.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
