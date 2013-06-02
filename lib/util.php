@@ -68,6 +68,37 @@ function getGraphDataForType(PDO $dbh, $shortName)
 	return $classes;
 }
 
+/**
+ * Retrieves an associative array of live supplier data
+ * 
+ * @param PDO $dbh
+ * @return array
+ */
+function getSupplierList(PDO $dbh)
+{
+	$sql = "
+		SELECT
+			name,
+			website
+		FROM
+			supplier
+		WHERE
+			business_close_at IS NULL
+		ORDER BY
+			name ASC
+	";
+	$sth = $dbh->prepare($sql);
+	$sth->execute();
+
+	return $sth->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * Checks we have the right PHP modules, and returns a new PDO object
+ * 
+ * @param string $dataFile
+ * @return \PDO
+ */
 function getDatabase($dataFile)
 {
 	// Check we have PDO and SQLite available

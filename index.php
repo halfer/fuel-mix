@@ -16,6 +16,22 @@
 				margin: 0px;
 				padding: 0px;
 			}
+			#supplier-list {
+				margin: 8px;
+				padding: 4px;
+				background-color: #dddddd;
+				border-radius: 8px;
+				min-height: 22px;
+				font-family: sans-serif;
+				font-size: 0.8em;
+			}
+			.supplier-item {
+				float: left;
+				margin: 2px;
+				padding: 5px;
+				background-color: lightsteelblue;
+				border-radius: 4px;
+			}
 			div.container {
 				width : 500px;
 				height: 300px;
@@ -25,9 +41,19 @@
 		</style>
 	</head>
 	<body>
+		<div id="supplier-list">
+			<?php // Here's the supplier list ?>
+			<?php foreach (getSupplierList($dbh) as $supplier): ?>
+				<div class="supplier-item">
+					<?php echo htmlentities($supplier['name']) ?>
+				</div>
+			<?php endforeach ?>
+			<div style="clear:both;"/>
+		</div>
+		
+		<?php // Here's the divs to hold the graphs ?>
 		<?php foreach ($energyTypes as $type): ?>
-		<div id="container-<?php echo $type ?>" class="container"></div>
-
+			<div id="container-<?php echo $type ?>" class="container"></div>
 		<?php endforeach ?>
 
 		<script type="text/javascript" src="js/flotr2.min.js"></script>
