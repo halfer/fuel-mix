@@ -67,3 +67,15 @@ function getGraphDataForType(PDO $dbh, $shortName)
 
 	return $classes;
 }
+
+function getDatabase($dataFile)
+{
+	// Check we have PDO and SQLite available
+	if (!extension_loaded('PDO') || !extension_loaded('pdo_sqlite'))
+	{
+		echo 'This application needs the `PDO` and `pdo_sqlite` modules';
+		exit();
+	}
+
+	return new PDO('sqlite:' . $dataFile);
+}
