@@ -44,10 +44,13 @@ function FuelMixRenderer()
 	 */
 	this.convertDateStringsToJSDate = function(data)
 	{
-		for(index in data[0].data)
+		for(var outerIndex in data)
 		{
-			var dateStr = data[0].data[index][0];
-			data[0].data[index][0] = new Date(dateStr);
+			for(var innerIndex in data[outerIndex].data)
+			{
+				var dateStr = data[outerIndex].data[innerIndex][0];
+				data[outerIndex].data[innerIndex][0] = new Date(dateStr);
+			}
 		}
 
 		return data;

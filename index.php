@@ -1,5 +1,5 @@
 <?php
-	# Basic initialisation
+	// Basic initialisation
 	$root = dirname(__FILE__);
 	$dbh = new PDO('sqlite:' . $root . '/data/energy-mix.sqlite');
 	$energyTypes = array('renewable', 'nuclear', 'coal', 'gas', 'other', );
@@ -11,7 +11,7 @@
 				supplier.name supplier_name,
 				energy_type.name energy_type_name,
 				mix_value.supplier_id,
-				date,
+				mix_value.date,
 				mix_value.percent
 			FROM
 				mix_value
@@ -19,35 +19,57 @@
 			INNER JOIN supplier ON (supplier.id = mix_value.supplier_id)
 			WHERE
 				energy_type.short_name = :energy_type_short_name
+			ORDER BY
+				mix_value.supplier_id,
+				mix_value.date
 		";
 		$sth = $dbh->prepare($sql);
 		$sth->execute(
 			array('energy_type_short_name' => $shortName)
 		);
 
-		return $sth->fetchAll(PDO::FETCH_ASSOC);
+		$outData = array();
+		foreach ($sth->fetchAll(PDO::FETCH_ASSOC) as $row)
+		{
+			// Check an entry exists for this supplier
+			$supplierName = $row['supplier_name'];
+			if (!array_key_exists($supplierName, $outData))
+			{
+				$outData[$supplierName] = array();
+			}
+
+			// Add row
+			$outData[$supplierName][] = $row;
+		}
+
+		return $outData;
 	}
 
 	function getGraphDataForType(PDO $dbh, $shortName)
 	{
-		$class = new stdClass();
+		$classes = array();
 
 		$data = getDataForType($dbh, $shortName);
-		$array = array();
 		$label = '';
-		foreach ($data as $row)
+		foreach ($data as $supplierName => $supplierData )
 		{
-			$array[] = array(
-				$row['date'],
-				(float) $row['percent']
-			);
-			$label = $row['supplier_name'] . ' (' . $row['energy_type_name'] . ')';
+			$class = new stdClass();
+
+			$array = array();
+			foreach ($supplierData as $row)
+			{
+				$array[] = array(
+					$row['date'],
+					(float) $row['percent']
+				);
+				$label = $supplierName . ' (' . $row['energy_type_name'] . ')';
+			}
+			$class->data = $array;
+			$class->label = $label;
+			$classes[] = $class;
 		}
 
-		$class->data = $array;
-		$class->label = $label;
-
-		return $class;
+		return $classes;
 	}
 
 ?>
@@ -87,11 +109,9 @@
 					var data;
 					<?php foreach ( $energyTypes as $type): ?>
 						data = renderer.convertDateStringsToJSDate(
-							[
-								<?php echo json_encode(
-									getGraphDataForType($dbh, $type)
-								) ?>
-							]
+							<?php echo json_encode(
+								getGraphDataForType($dbh, $type)
+							) ?>
 						);
 						renderer.drawGraph(
 							document.getElementById('container-<?php echo $type ?>'),
