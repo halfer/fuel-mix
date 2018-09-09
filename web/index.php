@@ -1,8 +1,8 @@
 <?php
 	// Basic initialisation
-	require_once 'lib/util.php';
+	$root = realpath(__DIR__ . '/..');
+	require_once $root . '/lib/util.php';
 
-	$root = dirname(__FILE__);
 	$dbh = getDatabase($root . '/data/energy-mix.sqlite');
 	$energyTypes = array('renewable', 'nuclear', 'coal', 'gas', 'other', );
 ?>
